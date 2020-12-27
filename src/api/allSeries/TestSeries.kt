@@ -1,5 +1,8 @@
 package api.allSeries
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class TestSeries(
     val analysis: Analysis = Analysis(),
     val canPurchaseThrough: String = "",

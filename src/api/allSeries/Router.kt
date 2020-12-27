@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.internal.closeQuietly
 
-fun getTestSeries(client: OkHttpClient, skip: Int, limit: Int,authCode:String): List<TestSeries> {
+fun getTestSeries(client: OkHttpClient,authCode:String, skip: Int=0, limit: Int=50): List<TestSeries> {
 
     val request: Request = Request.Builder()
         .url(
@@ -29,6 +29,6 @@ fun getTestSeries(client: OkHttpClient, skip: Int, limit: Int,authCode:String): 
     val bodyString = response.body?.string()
     response.closeQuietly()
     val fetchSerriesResponce=Utils.gson.fromJson(bodyString,FetchSerriesResponce::class.java)?: return emptyList()
-    return fetchSerriesResponce.data.results.testSeries
+    return fetchSerriesResponce.data.results.testSeries ?: return emptyList()
 
 }
