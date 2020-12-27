@@ -1,7 +1,7 @@
 package api.allSeries
 
 data class ExtraDetails(
-    val registeredData: RegisteredData = RegisteredData(),
-    val resumableTests: Any? = null,
-    val submissions: Any? = null
+    var registeredData: RegisteredData?,
+    var resumableTests: Any?,
+    var submissions: Any?
 )

@@ -1,6 +1,6 @@
 package api.allSeries
 
 data class TotalCount(
-    val relation: String = "",
-    val value: Int = 0
+    var relation: String?,
+    var value: Int?
 )

@@ -1,8 +1,8 @@
 package api.allSeries
 
 data class Feature(
-    val clientToShow: String = "",
-    val iconUrl: String = "",
-    val subtitle: String = "",
-    val title: String = ""
+    var clientToShow: String?,
+    var iconUrl: String?,
+    var subtitle: String?,
+    var title: String?
 )

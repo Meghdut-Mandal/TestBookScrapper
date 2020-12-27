@@ -29,6 +29,6 @@ fun getTestSeries(client: OkHttpClient,authCode:String, skip: Int=0, limit: Int=
     val bodyString = response.body?.string()
     response.closeQuietly()
     val fetchSerriesResponce=Utils.gson.fromJson(bodyString,FetchSerriesResponce::class.java)?: return emptyList()
-    return fetchSerriesResponce.data.results.testSeries ?: return emptyList()
+    return fetchSerriesResponce.data?.results?.testSeries ?: return emptyList()
 
 }

@@ -1,6 +1,6 @@
 <component name="libraryTable">
   <library name="org.litote.kmongo:kmongo:4.2.3" type="repository">
-    <properties maven-id="org.litote.kmongo:kmongo:4.2.3" />
+    <properties maven-id="org.litote.kmongo:kmongo:LATEST" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/litote/kmongo/kmongo/4.2.3/kmongo-4.2.3.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/litote/kmongo/kmongo-core/4.2.3/kmongo-core-4.2.3.jar!/" />

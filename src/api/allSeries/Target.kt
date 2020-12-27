@@ -1,7 +1,7 @@
 package api.allSeries
 
 data class Target(
-    val _id: String = "",
-    val isPrimary: Boolean = false,
-    val title: String = ""
+    var _id: String?,
+    var isPrimary: Boolean?,
+    var title: String?
 )

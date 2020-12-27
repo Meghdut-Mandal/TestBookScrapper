@@ -1,7 +1,7 @@
 package api.allSeries
 
 data class StudentStats(
-    val accessDetails: AccessDetails = AccessDetails(),
-    val testsAttempted: Int = 0,
-    val updatedOn: String = ""
+    var accessDetails: AccessDetails?,
+    var testsAttempted: Int?,
+    var updatedOn: String?
 )

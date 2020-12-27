@@ -4,6 +4,8 @@ import api.allTests.Test
 import api.question.TestQuestions
 import api.serriesDetails.TestSeriesDetails
 import api.serriesDetails.getTestDetails
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.litote.kmongo.* //NEEDED! import KMongo extensions
 
 
@@ -17,8 +19,11 @@ object TestDataBase {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        loadAllSerries()
-//        loadSeriesDetails()
+        ObjectMapper().registerModule(
+            KotlinModule(nullIsSameAsDefault = true))
+
+//        loadAllSerries()
+        loadSeriesDetails()
     }
 
 
@@ -26,7 +31,11 @@ object TestDataBase {
         testSerriesCol.find().toList().forEach {
             val client = ConnectionClient.client
             val code = ConnectionClient.authcode
-            val deatils= getTestDetails(client,code,it.id)
+            val id:String =it.id ?: "nil"
+            if (id=="nil")
+                println(">TestDataBase>loadSeriesDetails  Nil id ")
+
+            val deatils= getTestDetails(client,code,id)
             println(">TestDataBase>loadSeriesDetails  ${deatils?.exam} ")
         }
     }
@@ -35,7 +44,7 @@ object TestDataBase {
         println(">TestDataBase>loadAllSerries  skipping $skip ")
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
-        val testSeries = getTestSeries(client, code,skip)
+        val testSeries = getTestSeries(client, code,skip).distinctBy { it.id }
         if (testSeries.isNotEmpty()) {
             testSerriesCol.insertMany(testSeries)
             loadAllSerries(skip+testSeries.size)
