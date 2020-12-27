@@ -1,5 +1,5 @@
 package api.allTests
 
 data class Data(
-    val tests: List<Test> = listOf()
+    var tests: List<Test>?
 )

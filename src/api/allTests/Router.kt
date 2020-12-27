@@ -26,8 +26,8 @@ fun getAllTests(client: OkHttpClient,authCode:String,testSerriesID:String): List
     val response = client.newCall(request).execute()
     val bodyString = response.body?.string()
     response.closeQuietly()
-    val fetchAllTestResponse= Utils.gson.fromJson(bodyString, FetchAllTestResponse::class.java)?: return emptyList()
-    return  fetchAllTestResponse.data.tests
+    val fetchAllTestResponse= Utils.gson.fromJson(bodyString, FetchAllTestResponse::class.java)
+    return  fetchAllTestResponse.data?.tests ?: emptyList()
 
 
 }
