@@ -19,24 +19,24 @@ object TestDataBase {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        ObjectMapper().registerModule(
-            KotlinModule(nullIsSameAsDefault = true))
-
-//        loadAllSerries()
+        loadAllSerries()
         loadSeriesDetails()
     }
 
 
     fun loadSeriesDetails(){
-        testSerriesCol.find().toList().forEach {
+        testSerriesCol.find().toList().parallelStream().forEach {
             val client = ConnectionClient.client
             val code = ConnectionClient.authcode
             val id:String =it.id ?: "nil"
-            if (id=="nil")
+            if (id=="nil") {
                 println(">TestDataBase>loadSeriesDetails  Nil id ")
+            } else{
+                val deatils= getTestDetails(client,code,id) ?: return@forEach
+                testSeriesDetailsCol.insertOne(deatils)
+                println(">TestDataBase>loadSeriesDetails  ${deatils} ")
+            }
 
-            val deatils= getTestDetails(client,code,id)
-            println(">TestDataBase>loadSeriesDetails  ${deatils?.exam} ")
         }
     }
 
