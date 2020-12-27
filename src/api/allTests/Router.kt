@@ -6,10 +6,11 @@ import okhttp3.Request
 import okhttp3.internal.closeQuietly
 
 
-fun getAllTests(client: OkHttpClient,authCode:String,testSerriesID:String): List<Test> {
+fun getAllTests(client: OkHttpClient,authCode:String,testSerriesID:String,skip:Int=0,limit:Int=25): List<Test> {
     val request: Request = Request.Builder()
         .url(
-            "https://api.testbook.com/api/v2/test-series/$testSerriesID/tests/details?auth_code=$authCode&X-Tb-Client=web,1.2&language=English&__projection=%7B%22tests%22%3A%7B%22id%22%3A1%2C%22title%22%3A1%2C%22description%22%3A1%2C%22isFree%22%3A1%2C%22isLive%22%3A1%2C%22availFrom%22%3A1%2C%22endTime%22%3A1%2C%22startTime%22%3A1%2C%22availTill%22%3A1%2C%22duration%22%3A1%2C%22questionCount%22%3A1%2C%22totalMark%22%3A1%2C%22totalAttempts%22%3A1%2C%22cutOffs%22%3A%7B%22overAll%22%3A%7B%22cutOffs%22%3A%7B%22category%22%3A1%2C%22lowerBound%22%3A1%2C%22upperBound%22%3A1%7D%7D%7D%2C%22course%22%3A%7B%22id%22%3A1%7D%2C%22specificExams%22%3A%7B%22id%22%3A1%2C%22title%22%3A1%7D%2C%22isTestDiscussionPresent%22%3A1%2C%22target%22%3A1%2C%22targetGroup%22%3A1%2C%22targetSuperGroup%22%3A1%2C%22languages%22%3A1%7D%7D&testType=all&sectionId=&subSectionId=&skip=0&limit=25"
+            "https://api.testbook.com/api/v2/test-series/$testSerriesID/tests/details?auth_code=$authCode&X-Tb-Client=web,1.2&language=English&__projection=%7B%22tests%22%3A%7B%22id%22%3A1%2C%22title%22%3A1%2C%22description%22%3A1%2C%22isFree%22%3A1%2C%22isLive%22%3A1%2C%22availFrom%22%3A1%2C%22endTime%22%3A1%2C%22startTime%22%3A1%2C%22availTill%22%3A1%2C%22duration%22%3A1%2C%22questionCount%22%3A1%2C%22totalMark%22%3A1%2C%22totalAttempts%22%3A1%2C%22cutOffs%22%3A%7B%22overAll%22%3A%7B%22cutOffs%22%3A%7B%22category%22%3A1%2C%22lowerBound%22%3A1%2C%22upperBound%22%3A1%7D%7D%7D%2C%22course%22%3A%7B%22id%22%3A1%7D%2C%22specificExams%22%3A%7B%22id%22%3A1%2C%22title%22%3A1%7D%2C%22isTestDiscussionPresent%22%3A1%2C%22target%22%3A1%2C%22targetGroup%22%3A1%2C%22targetSuperGroup%22%3A1%2C%22languages%22%3A1%7D%7D&testType=all&" +
+                    "sectionId=&subSectionId=&skip=$skip&limit=$limit"
         )
         .method("GET", null)
         .addHeader("Accept", "application/json, text/plain, */*")

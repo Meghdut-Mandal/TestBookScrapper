@@ -1,12 +1,18 @@
 import api.allSeries.TestSeries
 import api.allSeries.getTestSeries
 import api.allTests.Test
+import api.allTests.getAllTests
 import api.question.TestQuestions
+import api.question.getQuestion
 import api.serriesDetails.TestSeriesDetails
 import api.serriesDetails.getTestDetails
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.litote.kmongo.* //NEEDED! import KMongo extensions
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.TimeUnit
 
 
 object TestDataBase {
@@ -19,20 +25,61 @@ object TestDataBase {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        loadAllSerries()
-        loadSeriesDetails()
+//      testSerriesCol.drop();  loadAllSerries()
+//        loadSeriesDetails()
+//        loadAllTests()
+//        val forkJoinPool = ForkJoinPool(50)
+//        forkJoinPool.submit {
+        loadQuestions()
+//        }
+//       forkJoinPool.awaitQuiescence(1,TimeUnit.HOURS)
+    }
+
+    private fun loadQuestions() {
+        testQuestionCol.drop()
+        val client = ConnectionClient.client
+        val code = ConnectionClient.authcode
+        testsCol.find().toList().parallelStream().forEach {
+            val question = getQuestion(client, code, it.id!!)
+            println(">TestDataBase>loadQuestions ${Thread.currentThread().name} ${question?._id} ")
+            if (question != null) {
+                try {
+                    testQuestionCol.insertOne(question)
+                } catch (e: com.mongodb.MongoWriteException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    fun loadAllTests() {
+        testsCol.drop()
+        val client = ConnectionClient.client
+        val code = ConnectionClient.authcode
+        testSerriesCol.find().toList().forEach {
+            var skip = 0
+            do {
+                val allTests = getAllTests(client, code, it.id!!, skip)
+                println(">TestDataBase>loadAllTests  $allTests ")
+                if (allTests.isNotEmpty()) {
+                    testsCol.insertMany(allTests)
+                }
+                skip += allTests.size
+            } while (allTests.isNotEmpty())
+        }
     }
 
 
-    fun loadSeriesDetails(){
+    fun loadSeriesDetails() {
+        testSeriesDetailsCol.drop()
+        val client = ConnectionClient.client
+        val code = ConnectionClient.authcode
         testSerriesCol.find().toList().parallelStream().forEach {
-            val client = ConnectionClient.client
-            val code = ConnectionClient.authcode
-            val id:String =it.id ?: "nil"
-            if (id=="nil") {
+            val id: String = it.id ?: "nil"
+            if (id == "nil") {
                 println(">TestDataBase>loadSeriesDetails  Nil id ")
-            } else{
-                val deatils= getTestDetails(client,code,id) ?: return@forEach
+            } else {
+                val deatils = getTestDetails(client, code, id) ?: return@forEach
                 testSeriesDetailsCol.insertOne(deatils)
                 println(">TestDataBase>loadSeriesDetails  ${deatils} ")
             }
@@ -44,10 +91,10 @@ object TestDataBase {
         println(">TestDataBase>loadAllSerries  skipping $skip ")
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
-        val testSeries = getTestSeries(client, code,skip).distinctBy { it.id }
+        val testSeries = getTestSeries(client, code, skip).distinctBy { it.id }
         if (testSeries.isNotEmpty()) {
             testSerriesCol.insertMany(testSeries)
-            loadAllSerries(skip+testSeries.size)
+            loadAllSerries(skip + testSeries.size)
         }
     }
 

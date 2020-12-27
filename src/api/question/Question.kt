@@ -16,7 +16,7 @@ data class Question(
     var negMarks: Double?,
     var or: QuestionValue?,
     var partialMarks: PartialMarks?,
-    var posMarks: Int?,
+    var posMarks: Double?,
     var singlePageComp: Boolean?,
     var ta: QuestionValue?,
     var te: QuestionValue?,
