@@ -1,7 +1,7 @@
 package api.serriesDetails
 
 data class FaqDetail(
-    val faqs: Any? = null,
-    val subTitle: String = "",
-    val title: String = ""
+    var faqs: Any?,
+    var subTitle: String?,
+    var title: String?
 )

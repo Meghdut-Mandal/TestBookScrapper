@@ -1,6 +1,6 @@
 package api.serriesDetails
 
 data class AccessDetails(
-    val canAccess: Boolean = false,
-    val enrolled: Boolean = false
+    var canAccess: Boolean?,
+    var enrolled: Boolean?
 )

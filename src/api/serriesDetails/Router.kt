@@ -34,5 +34,5 @@ fun getTestDetails(
 
     val testSerriesDetailsResponce =
         Utils.gson.fromJson(bodyString, TestSerriesDetailsResponce::class.java) ?: return null
-    return testSerriesDetailsResponce.data.details
+    return testSerriesDetailsResponce.data?.details
 }

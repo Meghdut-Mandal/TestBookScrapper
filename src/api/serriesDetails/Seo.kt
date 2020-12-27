@@ -1,7 +1,7 @@
 package api.serriesDetails
 
 data class Seo(
-    val metaDescription: String = "",
-    val metaTitle: String = "",
-    val ogProperties: OgProperties = OgProperties()
+    var metaDescription: String?,
+    var metaTitle: String?,
+    var ogProperties: OgProperties?
 )

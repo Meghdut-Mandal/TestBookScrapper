@@ -1,8 +1,8 @@
 package api.serriesDetails
 
 data class Section(
-    val id: String = "",
-    val name: String = "",
-    val shortName: String = "",
-    val subsections: List<Subsection> = listOf()
+    var id: String?,
+    var name: String?,
+    var shortName: String?,
+    var subsections: List<Subsection>?
 )
