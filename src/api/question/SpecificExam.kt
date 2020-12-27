@@ -1,6 +1,6 @@
 package api.question
 
 data class SpecificExam(
-    val id: String = "",
-    val title: String = ""
+    var id: String?,
+    var title: String?
 )

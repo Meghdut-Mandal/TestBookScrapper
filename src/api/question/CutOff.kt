@@ -1,7 +1,7 @@
 package api.question
 
 data class CutOff(
-    val category: String = "",
-    val lowerBound: Int = 0,
-    val upperBound: Int = 0
+    var category: String?,
+    var lowerBound: Int?,
+    var upperBound: Int?
 )

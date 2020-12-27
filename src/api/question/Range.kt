@@ -1,6 +1,6 @@
 package api.question
 
 data class Range(
-    val end: String = "",
-    val start: String = ""
+    var end: String?,
+    var start: String?
 )

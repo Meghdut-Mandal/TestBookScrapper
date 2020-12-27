@@ -1,6 +1,6 @@
 package api.question
 
 data class DerivedGroupTarget(
-    val _id: String = "",
-    val popularity: Int = 0
+    var _id: String?,
+    var popularity: Int?
 )

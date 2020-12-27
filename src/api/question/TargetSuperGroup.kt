@@ -1,6 +1,6 @@
 package api.question
 
 data class TargetSuperGroup(
-    val _id: String = "",
-    val title: String = ""
+    var _id: String?,
+    var title: String?
 )

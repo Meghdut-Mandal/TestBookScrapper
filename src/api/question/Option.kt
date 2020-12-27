@@ -1,6 +1,6 @@
 package api.question
 
 data class Option(
-    val prompt: String = "",
-    val value: String = ""
+    var prompt: String?,
+    var value: String?
 )
