@@ -25,7 +25,7 @@ import com.mongodb.client.model.UpdateOptions
 object TestDataBase {
     val client =
         KMongo.createClient(ConnectionClient.mongoDBUrl) //get com.mongodb.MongoClient new instance
-    val database = client.getDatabase("testBook2")
+    val database = client.getDatabase(ConnectionClient.dataBaseName)
     val testSeriesDetailsCol = database.getCollection<TestSeriesDetails>() //KMongo extension method
     val testSerriesCol = database.getCollection<TestSeries>()
     val testsCol = database.getCollection<Test>()

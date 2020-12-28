@@ -9,6 +9,7 @@ object ConnectionClient {
     val client = OkHttpClient().newBuilder()
         .build()
     val mongoDBUrl: String
+    val dataBaseName:String
 
     init {
         if (!configFile.exists()) {
@@ -19,6 +20,7 @@ object ConnectionClient {
         val config = gson.fromJson(File("config.json").bufferedReader(), Config::class.java)
         authcode = config.authcode
         mongoDBUrl = config.mongo_url
+        dataBaseName=config.rootCollection
 
     }
 
