@@ -5,6 +5,6 @@ RUN  apt-get update \
 
 RUN curl -Ls https://api.github.com/repos/Meghdut-Mandal/TestBookScrapper/releases/latest | grep -wo "https.*TestBookScrapper.zip" | wget -qi -
 RUN unzip TestBookScrapper.zip
-RUN sed -i 's/localhost/mongo/g' config.json
+CMD  sed -i 's/localhost/mongo/g' config.json
 ENTRYPOINT ["java","-jar","TestBookScrapper.jar"]
 
