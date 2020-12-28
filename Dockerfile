@@ -106,6 +106,7 @@ VOLUME /data/db /data/configdb
 
 EXPOSE 27017
 
+RUN apt update -y
 RUN apt-get install openjdk-15-jdk
 RUN export JAVA_HOME=/usr/lib/jvm/openjdk-15-jdk
 RUN export PATH=$PATH:$JAVA_HOME/bin
