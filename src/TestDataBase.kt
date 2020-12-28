@@ -22,8 +22,8 @@ import java.util.stream.StreamSupport
 
 
 object TestDataBase {
-    val client = KMongo.createClient() //get com.mongodb.MongoClient new instance
-    val database = client.getDatabase("testBook")
+    val client = KMongo.createClient(ConnectionClient.mongoDBUrl) //get com.mongodb.MongoClient new instance
+    val database = client.getDatabase("testBook2")
     val testSeriesDetailsCol = database.getCollection<TestSeriesDetails>() //KMongo extension method
     val testSerriesCol = database.getCollection<TestSeries>()
     val testsCol = database.getCollection<Test>()
