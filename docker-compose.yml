@@ -6,7 +6,7 @@ services :
     build: .
     links:  
       - mongo
- database:
+ mongo:
     container_name: mongo
     image: mongo
     ports:
