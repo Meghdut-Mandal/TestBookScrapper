@@ -19,16 +19,19 @@ import java.util.Spliterator
 import java.util.Spliterators
 import java.util.stream.Stream
 import java.util.stream.StreamSupport
+import com.mongodb.client.model.UpdateOptions
 
 
 object TestDataBase {
-    val client = KMongo.createClient(ConnectionClient.mongoDBUrl) //get com.mongodb.MongoClient new instance
+    val client =
+        KMongo.createClient(ConnectionClient.mongoDBUrl) //get com.mongodb.MongoClient new instance
     val database = client.getDatabase("testBook2")
     val testSeriesDetailsCol = database.getCollection<TestSeriesDetails>() //KMongo extension method
     val testSerriesCol = database.getCollection<TestSeries>()
     val testsCol = database.getCollection<Test>()
     val testQuestionCol = database.getCollection<TestQuestions>()
     val testSolCol = database.getCollection<TestSolution>()
+    var options = UpdateOptions().upsert(true)
 
 
     fun complete() {
@@ -53,12 +56,8 @@ object TestDataBase {
         testQuestionCol.find().forEach {
             val solution = getTestSolutions(client, code, it._id!!)
             if (solution != null) {
-                try {
-                    testSolCol.insertOne(solution)
-                    println(">TestDataBase>loadSolutions  ${solution._id} ")
-                } catch (e: com.mongodb.MongoWriteException) {
-                    e.printStackTrace()
-                }
+                testSolCol.updateOne(solution, options)
+                println(">TestDataBase>loadSolutions  ${solution._id} ")
             } else {
                 println(">TestDataBase>loadSolutions  Null At ${it._id} ")
             }
@@ -72,12 +71,8 @@ object TestDataBase {
         testsCol.find().toList().parallelStream().forEach {
             val question = getQuestion(client, code, it.id!!)
             println(">TestDataBase>loadQuestions  ${question?._id} ")
-            if (question != null) {
-                try {
-                    testQuestionCol.insertOne(question)
-                } catch (e: com.mongodb.MongoWriteException) {
-                    e.printStackTrace()
-                }
+            if (question?._id != null) {
+                testQuestionCol.updateOne(question, options)
             }
         }
     }

@@ -1,14 +1,15 @@
 package api.solution
 
 import api.Utils.gson
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.closeQuietly
-import org.litote.kmongo.json
 
 
 private val submission = """
@@ -105,16 +106,34 @@ fun getTestSolutions(client: OkHttpClient, authcode: String, testID: String): Te
     val response = client.newCall(request).execute()
     val bodyString = response.body?.string()
     response.closeQuietly()
-    val responseObject = gson.fromJson(bodyString, JsonObject::class.java)["data"]?.asJsonObject ?: return null
-    val solutions = responseObject.entrySet().map {
-        val sol = gson.toJson(it.value)
-        val questionSolution = gson.fromJson(sol, QuestionSolution::class.java).apply {
-            _id = it.key
-        }
-        questionSolution
-    }.toList()
-    if (solutions.isEmpty())
-        return  null
-    return TestSolution(testID,solutions)
+    val payLoad = gson.fromJson(bodyString, JsonObject::class.java)
+    val success = payLoad["success"].asBoolean
+    if (success){
+        val dataSegemnt = payLoad["data"]?.asJsonObject ?: return null
+        val solutions = dataSegemnt.entrySet().map {
+            val sol = gson.toJson(it.value)
+            val questionSolution = getQuestionSolution(sol, it)!!
+            questionSolution
+        }.toList()
+        if (solutions.isEmpty())
+            return  null
+        return TestSolution(testID,solutions)
+    }else{
+        println("api.solution>>getTestSolutions Unsuccessful ;( ${payLoad["message"]}  ")
+        return null
+    }
+}
 
+private fun getQuestionSolution(
+    sol: String?,
+    it: MutableMap.MutableEntry<String, JsonElement>
+): QuestionSolution? {
+    try {
+        return  gson.fromJson(sol, QuestionSolution::class.java).apply {
+             _id = it.key
+         }
+    } catch (e: JsonSyntaxException) {
+        e.printStackTrace()
+    }
+    return null
 }
