@@ -6,6 +6,8 @@ import api.question.TestQuestions
 import api.question.getQuestion
 import api.serriesDetails.TestSeriesDetails
 import api.serriesDetails.getTestDetails
+import api.solution.TestSolution
+import api.solution.getTestSolutions
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.litote.kmongo.* //NEEDED! import KMongo extensions
@@ -22,17 +24,29 @@ object TestDataBase {
     val testSerriesCol = database.getCollection<TestSeries>()
     val testsCol = database.getCollection<Test>()
     val testQuestionCol = database.getCollection<TestQuestions>()
+    val testSolCol= database.getCollection<TestSolution>()
 
     @JvmStatic
     fun main(args: Array<String>) {
-//      testSerriesCol.drop();  loadAllSerries()
-//        loadSeriesDetails()
-//        loadAllTests()
-//        val forkJoinPool = ForkJoinPool(50)
-//        forkJoinPool.submit {
-        loadQuestions()
-//        }
-//       forkJoinPool.awaitQuiescence(1,TimeUnit.HOURS)
+        loadSolutions()
+    }
+
+    private fun loadSolutions(){
+        val client = ConnectionClient.client
+        val code = ConnectionClient.authcode
+        testQuestionCol.find().toList().forEach {
+            val solution= getTestSolutions(client,code,it._id!!)
+            if (solution != null) {
+                try {
+                    testSolCol.insertOne(solution)
+                    println(">TestDataBase>loadSolutions  ${solution._id} ")
+                } catch (e: com.mongodb.MongoWriteException) {
+                    e.printStackTrace()
+                }
+            }else{
+                println(">TestDataBase>loadSolutions  Null At ${it._id} ")
+            }
+        }
     }
 
     private fun loadQuestions() {
@@ -41,7 +55,7 @@ object TestDataBase {
         val code = ConnectionClient.authcode
         testsCol.find().toList().parallelStream().forEach {
             val question = getQuestion(client, code, it.id!!)
-            println(">TestDataBase>loadQuestions ${Thread.currentThread().name} ${question?._id} ")
+            println(">TestDataBase>loadQuestions  ${question?._id} ")
             if (question != null) {
                 try {
                     testQuestionCol.insertOne(question)
@@ -52,7 +66,7 @@ object TestDataBase {
         }
     }
 
-    fun loadAllTests() {
+    private fun loadAllTests() {
         testsCol.drop()
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
@@ -70,7 +84,7 @@ object TestDataBase {
     }
 
 
-    fun loadSeriesDetails() {
+    private fun loadSeriesDetails() {
         testSeriesDetailsCol.drop()
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
@@ -87,7 +101,7 @@ object TestDataBase {
         }
     }
 
-    fun loadAllSerries(skip: Int = 0) {
+    private fun loadAllSerries(skip: Int = 0) {
         println(">TestDataBase>loadAllSerries  skipping $skip ")
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
