@@ -3,6 +3,7 @@ FROM ubuntu:bionic
 RUN  apt-get update \
   && apt-get install -y wget \
   && rm -rf /var/lib/apt/lists/*
+RUN echo hello
 
 RUN sh -c "$(wget https://github.com/Meghdut-Mandal/sScripts/raw/main/mongo.sh -O -)"
 RUN  sudo apt-get install openjdk-15-jdk
