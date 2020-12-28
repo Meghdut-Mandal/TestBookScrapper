@@ -32,6 +32,7 @@ object TestDataBase {
 
 
     fun complete() {
+        database.drop()
         loadAllSerries()
         loadSeriesDetails()
         loadAllTests()
