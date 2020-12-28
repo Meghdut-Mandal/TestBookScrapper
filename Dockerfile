@@ -105,12 +105,12 @@ RUN mkdir -p /data/db /data/configdb \
 VOLUME /data/db /data/configdb
 
 EXPOSE 27017
-RUN mongod
 
 RUN  sudo apt-get install openjdk-15-jdk
 RUN export JAVA_HOME=/usr/lib/jvm/openjdk-15-jdk
 RUN export PATH=$PATH:$JAVA_HOME/bin
 RUN  curl -Ls https://api.github.com/repos/Meghdut-Mandal/TestBookScrapper/releases/latest | grep -wo "https.*TestBookScrapper.zip" | wget -qi -
 RUN unzip TestBookScrapper.zip
+CMD ["mongod"]
 CMD ["java","-jar","TestBookScrapper.jar"]
 
