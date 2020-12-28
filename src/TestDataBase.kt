@@ -15,6 +15,10 @@ import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.TimeUnit
+import java.util.Spliterator
+import java.util.Spliterators
+import java.util.stream.Stream
+import java.util.stream.StreamSupport
 
 
 object TestDataBase {
@@ -24,18 +28,29 @@ object TestDataBase {
     val testSerriesCol = database.getCollection<TestSeries>()
     val testsCol = database.getCollection<Test>()
     val testQuestionCol = database.getCollection<TestQuestions>()
-    val testSolCol= database.getCollection<TestSolution>()
+    val testSolCol = database.getCollection<TestSolution>()
 
-    @JvmStatic
-    fun main(args: Array<String>) {
+
+    fun complete() {
+        loadAllSerries()
+        loadSeriesDetails()
+        loadAllTests()
+        loadQuestions()
         loadSolutions()
     }
 
-    private fun loadSolutions(){
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        complete()
+    }
+
+    private fun loadSolutions() {
+        testSolCol.drop()
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
-        testQuestionCol.find().toList().forEach {
-            val solution= getTestSolutions(client,code,it._id!!)
+        testQuestionCol.find().forEach {
+            val solution = getTestSolutions(client, code, it._id!!)
             if (solution != null) {
                 try {
                     testSolCol.insertOne(solution)
@@ -43,7 +58,7 @@ object TestDataBase {
                 } catch (e: com.mongodb.MongoWriteException) {
                     e.printStackTrace()
                 }
-            }else{
+            } else {
                 println(">TestDataBase>loadSolutions  Null At ${it._id} ")
             }
         }
@@ -70,7 +85,7 @@ object TestDataBase {
         testsCol.drop()
         val client = ConnectionClient.client
         val code = ConnectionClient.authcode
-        testSerriesCol.find().toList().forEach {
+        testSerriesCol.find().toList().parallelStream().forEach {
             var skip = 0
             do {
                 val allTests = getAllTests(client, code, it.id!!, skip)
