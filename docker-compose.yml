@@ -11,6 +11,6 @@ services:
   api:
     depends_on:
      - mongodb
-    image: openjdk:15-jdk-bionic
+    image: openjdk:15
     links:
       - mongodb
