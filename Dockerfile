@@ -5,7 +5,5 @@ RUN  apt-get update \
 
 RUN curl -Ls https://api.github.com/repos/Meghdut-Mandal/TestBookScrapper/releases/latest | grep -wo "https.*TestBookScrapper.zip" | wget -qi -
 RUN unzip TestBookScrapper.zip
-COPY . .
-RUN chmod +x run.sh
-ENTRYPOINT ["./run.sh"]
+CMD ["java","-jar","TestBookScrapper.jar"]
 
